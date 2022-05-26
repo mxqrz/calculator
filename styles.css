@@ -58,7 +58,7 @@ button
     transition: 0.5s;
 }
 
-button:hover
+[data-num]:hover
 {
     background-color: #202020
 }
@@ -79,7 +79,12 @@ button:hover
     background-color: #f69a06;
 }
 
-.o:hover
+.opHover
+{
+    background-color: #b36e00;
+}
+
+#equals:hover
 {
     background-color: #b36e00;
 }
@@ -98,4 +103,9 @@ button:hover
     font-size: 4em;
     margin-right: 0.25em;
     margin-bottom: 0.25em;
+}
+
+.selected
+{
+    background-color:#ffcf83;
 }
