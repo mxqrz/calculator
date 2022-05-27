@@ -31,17 +31,42 @@ const numbers = document.querySelectorAll("[data-num]");
 
 let inputStream = [0];
 let currentIndex = 0;
-let answer = 0;
+let answer = Number.MIN_VALUE;
 let operator = false;
 let decimal = false;
 let negative = false;
 
+let buttonHover = (entity, className) =>
+{
+    entity.addEventListener("mouseenter", () => 
+    {
+        entity.classList.add(className);
+    })
+
+    entity.addEventListener("mouseleave", () => 
+    {
+        entity.classList.remove(className);
+    })
+}
+
+let enter = (entity) =>
+{
+    entity.classList.add('buttonSelected');
+    setTimeout(() => {
+        entity.classList.remove('buttonSelected');  
+    }, 130);
+}
+
 numbers.forEach(num => 
 {
+    buttonHover(num, "numHover");
     num.addEventListener('click', () => 
     {
+        enter(num);
         if (!operator)
         {
+            decimal ? inputStream[0] = parseFloat(inputStream[0]) : inputStream[0] = parseInt(inputStream[0]);
+
             input.innerText == "0" || input.innerText == "Infinity" || input.innerText == "NaN" || input.innerText == "lol" || input.innerText == "error" || inputStream[0] == answer ? input.textContent = num.textContent : input.textContent += num.textContent;
             inputStream[0] = input.textContent;
             currentIndex = 0;
@@ -49,7 +74,6 @@ numbers.forEach(num =>
         }
         else
         {
-            decimal ? inputStream[0] = parseFloat(inputStream[0]) : inputStream[0] = parseInt(inputStream[0]);
             decimal = false;
 
             input.innerText = "";
@@ -104,12 +128,15 @@ operators.forEach(op =>
     });
 })
 
+buttonHover(equals, "opHover");
+
 equals.addEventListener('click', () => 
 {
+    enter(equals);
+    console.log(decimal);
     decimal ? inputStream[2] = parseFloat(inputStream[2]) : inputStream[2] = parseInt(inputStream[2]);
 
     let firstNum = inputStream[0];
-    let op = inputStream[1];
     let secondNum = inputStream[2];
 
     switch (inputStream[1])
@@ -154,12 +181,27 @@ clear.addEventListener('click', () =>
 
 decimalB.addEventListener('click', () =>
 {
-    if (!(input.textContent == 0) && !(inputStream[currentIndex] == 0) && !decimal)
+    if (input.textContent != answer)
     {
         input.innerText += ".";
         decimal = true;
     }
 })
+
+decimalB.addEventListener('mouseenter', () => 
+{
+    decimalB.classList.add('numHover');
+});
+
+decimalB.addEventListener('mouseleave', () => 
+{
+    decimalB.classList.remove('numHover');
+})
+
+decimalB.addEventListener('mouseleave', () => 
+{
+    decimalB.classList.remove('opHover');
+});
 
 posneg.addEventListener('click', () => 
 {
@@ -180,9 +222,21 @@ posneg.addEventListener('click', () =>
     }
 })
 
+mod.addEventListener('click', () => 
+{
+    if (!(input.textContent == 0) && !(inputStream[currentIndex] == 0))
+    {
+        input.innerText /= 10;
+        inputStream[currentIndex] /= 10;
+    }
+})
+
 let updateInput = (result) =>
 {
+    console.log(inputStream[0] + inputStream[1] + inputStream[2] + "=" + result)
+
     answer = result;
+    console.log(result);
     inputStream[0] = result;
     inputStream[1] = undefined;
     inputStream[2] = undefined;
@@ -191,7 +245,7 @@ let updateInput = (result) =>
         {
             opp.classList.remove('selected');
         });
-
+    
     input.textContent = +result.toFixed(2);
 }
 
