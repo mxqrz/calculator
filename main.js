@@ -3,6 +3,7 @@
 // misc
 const input = document.querySelector(".input-c");
 const clear = document.querySelector("#clear");
+const decimalB = document.querySelector("#decimal");
 
 // operators
 const posneg = document.querySelector("#posneg");
@@ -30,8 +31,9 @@ const numbers = document.querySelectorAll("[data-num]");
 
 let inputStream = [0];
 let currentIndex = 0;
-let lastAnswer = 0;
+let answer = 0;
 let operator = false;
+let decimal = false;
 
 numbers.forEach(num => 
 {
@@ -39,15 +41,20 @@ numbers.forEach(num =>
     {
         if (!operator)
         {
-            input.innerText == "0" || input.innerText == "Infinity" || input.innerText == "NaN" || input.innerText == "lol" ? input.textContent = num.textContent : input.textContent += num.textContent;
-            inputStream[0] = parseInt(input.textContent);
+            input.innerText == "0" || input.innerText == "Infinity" || input.innerText == "NaN" || input.innerText == "lol" || input.innerText == "error" || inputStream[0] == answer ? input.textContent = num.textContent : input.textContent += num.textContent;
+            inputStream[0] = input.textContent;
+            currentIndex = 0;
             console.log(inputStream[0]);
         }
         else
         {
+            decimal ? inputStream[0] = parseFloat(inputStream[0]) : inputStream[0] = parseInt(inputStream[0]);
+            decimal = false;
+
             input.innerText = "";
             input.innerText == '0' ? input.textContent = num.textContent : input.textContent += num.textContent;
-            inputStream[2] = parseInt(input.textContent);
+            inputStream[2] = input.textContent;
+            currentIndex = 2;
             console.log(inputStream[2]);
             operator = false;
         }
@@ -98,6 +105,8 @@ operators.forEach(op =>
 
 equals.addEventListener('click', () => 
 {
+    decimal ? inputStream[2] = parseFloat(inputStream[2]) : inputStream[2] = parseInt(inputStream[2]);
+
     let firstNum = inputStream[0];
     let op = inputStream[1];
     let secondNum = inputStream[2];
@@ -127,6 +136,8 @@ clear.addEventListener('click', () =>
 {
     inputStream[0] = 0;
     input.textContent = "0";
+    decimal = false;
+    operator = false;
 
     for (let i = 1; i < 3; i++)
     {
@@ -137,12 +148,20 @@ clear.addEventListener('click', () =>
         {
             opp.classList.remove('selected');
         });
-    
-    operator = false;
+})
+
+decimalB.addEventListener('click', () =>
+{
+    if (!(input.textContent == 0) && !(inputStream[currentIndex] == 0) && !decimal)
+    {
+        input.innerText += ".";
+        decimal = true;
+    }
 })
 
 let updateInput = (result) =>
 {
+    answer = result;
     inputStream[0] = result;
     inputStream[1] = undefined;
     inputStream[2] = undefined;
