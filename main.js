@@ -34,6 +34,7 @@ let currentIndex = 0;
 let answer = 0;
 let operator = false;
 let decimal = false;
+let negative = false;
 
 numbers.forEach(num => 
 {
@@ -138,6 +139,7 @@ clear.addEventListener('click', () =>
     input.textContent = "0";
     decimal = false;
     operator = false;
+    negative = false;
 
     for (let i = 1; i < 3; i++)
     {
@@ -156,6 +158,25 @@ decimalB.addEventListener('click', () =>
     {
         input.innerText += ".";
         decimal = true;
+    }
+})
+
+posneg.addEventListener('click', () => 
+{
+    if (!(input.textContent == 0) && !(inputStream[currentIndex] == 0))
+    {
+        if (!negative)
+        {
+            input.innerText = "-" + input.innerText;
+            inputStream[currentIndex] = "-" + inputStream[currentIndex];
+        }
+        else
+        {
+            input.innerText = input.innerText.replace('-', '');
+            inputStream[currentIndex] = inputStream[currentIndex].replace('-', '');
+        }
+
+        negative = !negative;
     }
 })
 
