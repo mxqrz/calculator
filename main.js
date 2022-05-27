@@ -29,20 +29,17 @@ const nine = document.querySelector("#nine");
 const numbers = document.querySelectorAll("[data-num]");
 
 let inputStream = [0];
-let inputBool = false;
+let currentIndex = 0;
 let lastAnswer = 0;
-let divide = false;
-let multiply = false;
-let subtract = false;
-let add = false;
+let operator = false;
 
 numbers.forEach(num => 
 {
     num.addEventListener('click', () => 
     {
-        if (inputBool == false)
+        if (!operator)
         {
-            input.innerText == '0' ? input.textContent = num.textContent : input.textContent += num.textContent;
+            input.innerText == "0" || input.innerText == "Infinity" || input.innerText == "NaN" || input.innerText == "lol" ? input.textContent = num.textContent : input.textContent += num.textContent;
             inputStream[0] = parseInt(input.textContent);
             console.log(inputStream[0]);
         }
@@ -52,7 +49,7 @@ numbers.forEach(num =>
             input.innerText == '0' ? input.textContent = num.textContent : input.textContent += num.textContent;
             inputStream[2] = parseInt(input.textContent);
             console.log(inputStream[2]);
-            inputBool = false;
+            operator = false;
         }
     });
 })
@@ -71,18 +68,109 @@ operators.forEach(op =>
 
     op.addEventListener('click', () => 
     {
-        inputBool = true;
         inputStream[1] = op.innerText;
         console.log(inputStream[1]);
-        operators.forEach(opp => 
+
+        if (!operator)
         {
-            opp != op ? opp.classList.remove('selected') : opp.classList.add('selected');
-        })
+            operator = true;
+            if (op.classList.contains('selected'))
+            {
+                op.classList.remove('selected');
+                inputStream[1] = undefined;
+                operator = false;
+            }
+            else
+            {
+                operators.forEach(opp => 
+                    {
+                        opp != op ? opp.classList.remove('selected') : opp.classList.add('selected');
+                    });
+            }
+        }
+        else
+        {
+            op.classList.remove('selected');
+            inputBool = false;
+        }
     });
 })
 
 equals.addEventListener('click', () => 
 {
+    let firstNum = inputStream[0];
+    let op = inputStream[1];
+    let secondNum = inputStream[2];
 
+    switch (inputStream[1])
+    {
+        case "÷":
+            updateInput(divideFunc(firstNum, secondNum));
+            if (secondNum === 0) input.textContent = "lol";
+            break;
+        case "×":
+            updateInput(multiplyFunc(firstNum, secondNum));
+            break;
+        case "-":
+            updateInput(subtractFunc(firstNum,secondNum));
+            break;
+        case "+":
+            updateInput(addFunc(firstNum, secondNum));
+            break;
+        default:
+            input.textContent = "error";
+    }
+    operator = false;
 });
 
+clear.addEventListener('click', () => 
+{
+    inputStream[0] = 0;
+    input.textContent = "0";
+
+    for (let i = 1; i < 3; i++)
+    {
+        inputStream[i] = undefined;
+    }
+
+    operators.forEach(opp => 
+        {
+            opp.classList.remove('selected');
+        });
+    
+    operator = false;
+})
+
+let updateInput = (result) =>
+{
+    inputStream[0] = result;
+    inputStream[1] = undefined;
+    inputStream[2] = undefined;
+
+    operators.forEach(opp => 
+        {
+            opp.classList.remove('selected');
+        });
+
+    input.textContent = +result.toFixed(2);
+}
+
+let addFunc = (x, y) => 
+{
+	return x + y;
+}
+
+let subtractFunc = (x, y) => 
+{
+	return x - y;
+}
+
+let multiplyFunc = (x, y) =>
+{
+    return x * y;
+}
+
+let divideFunc = (x, y) =>
+{
+    return x / y;
+}
