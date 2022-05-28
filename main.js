@@ -29,7 +29,7 @@ const nine = document.querySelector("#nine");
 
 const numbers = document.querySelectorAll("[data-num]");
 
-let inputStream = [0];
+let inputStream = [];
 let currentIndex = 0;
 let answer = Number.MIN_VALUE;
 let operator = false;
@@ -75,13 +75,14 @@ numbers.forEach(num =>
         else
         {
             decimal = false;
+            answer = Number.MIN_VALUE;
 
             input.innerText = "";
-            input.innerText == '0' ? input.textContent = num.textContent : input.textContent += num.textContent;
+            input.textContent += num.textContent;
             inputStream[2] = input.textContent;
             currentIndex = 2;
-            console.log(inputStream[2]);
-            operator = false;
+            console.log(inputStream[2] + " 2");
+            console.log("hi");
         }
     });
 })
@@ -134,10 +135,11 @@ equals.addEventListener('click', () =>
 {
     enter(equals);
     console.log(decimal);
-    decimal ? inputStream[2] = parseFloat(inputStream[2]) : inputStream[2] = parseInt(inputStream[2]);
-
-    let firstNum = inputStream[0];
-    let secondNum = inputStream[2];
+    //decimal ? inputStream[2] = parseFloat(inputStream[2]) : inputStream[2] = parseInt(inputStream[2]);
+    let firstNum = Number(inputStream[0]);
+    let secondNum = Number(inputStream[2]);
+    console.log(inputStream[2])
+    console.log(Number(inputStream[2]))
 
     switch (inputStream[1])
     {
